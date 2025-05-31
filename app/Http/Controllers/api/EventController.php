@@ -4,39 +4,30 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
+use App\Http\Traits\canLoadRealtionhips;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
+
 {
+    use canLoadRealtionhips;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         // return Event::all();
-        $query = Event::query();
-        $relations = ['user','attendees','attendees.user'];
+        $query = $this->loadRealtions(Event::query());
 
-        foreach($relations as $relation){
-            $query->when(
-                $this->requestParams($relation),
-                fn($q) => $q->with($relation)
-            );
-        }
-        // return EventResource::collection( $query->latest()->paginate());
-        return new EventResource($query);
+
+
+        return EventResource::collection( $query->latest()->paginate(100));
+        // return new EventResource($query);
     }
 
-    protected function requestParams(string $relation)
-    {
-        $include = request()->query('include');
-        if (!$include) {
-            return false;
-        }
-        $relations = array_map('trim',explode(',', $include));
-        return in_array($relation,$relations);
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -65,8 +56,9 @@ class EventController extends Controller
     {
         // return $event;
         // return EventResource::make($event);
-        $event->load('user', 'attendees');
-        return new EventResource($event);
+        // $event->load('user', 'attendees');
+        
+        return new EventResource($this->loadRealtions($event));
     }
 
     /**
