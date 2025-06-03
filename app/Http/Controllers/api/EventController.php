@@ -41,7 +41,7 @@ class EventController extends Controller
             "end_date" => "required|date|after:start_date"
         ]);
 
-        $validatedRequest["user_id"] = 1;
+        $validatedRequest["user_id"] = $request->user()->id;
 
         $event = Event::create($validatedRequest);
 

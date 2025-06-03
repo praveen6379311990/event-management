@@ -25,7 +25,7 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!Hash::check($request->email, $user->password)) {
+        if (!Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 "password" => ['The given creadential is incorrect']
             ]);
