@@ -46,7 +46,7 @@ class EventController extends Controller
         $event = Event::create($validatedRequest);
 
         // return $event;
-        return new EventResource($event);
+        return new EventResource($this->loadRealtions($event));
     }
 
     /**
@@ -57,7 +57,7 @@ class EventController extends Controller
         // return $event;
         // return EventResource::make($event);
         // $event->load('user', 'attendees');
-        
+
         return new EventResource($this->loadRealtions($event));
     }
 
