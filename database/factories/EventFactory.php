@@ -19,8 +19,8 @@ class EventFactory extends Factory
         return [
             'name' => $this->faker->sentence(3),
             'description' => $this->faker->text(),
-            'start_date' => $this->faker->dateTimeBetween('now','+1 month'),
-            'end_date' => $this->faker->dateTimeBetween('+1 month','+2 month')
+            'start_date' => $this->faker->dateTimeBetween('now','+1 day'),
+            'end_date' => $this->faker->dateTimeBetween('+1 day','+2 day')
         ];
     }
 }

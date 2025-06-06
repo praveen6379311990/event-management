@@ -13,7 +13,18 @@ Route::get('/user', function (Request $request) {
 Route::post('/login',[AuthController::class, 'login']);
 Route::post('/logout',[AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::apiResource('events',EventController::class)
-->middleware('auth:sanctum')->except(['index','show']);
+// Public routes (no auth)
+Route::apiResource('events', EventController::class)->only(['index', 'show']);
 
-Route::apiResource('events.attendees',AttendeeController::class)->scoped(['attendees' =>'events'])->except('update');
+// Protected routes (with auth)
+Route::apiResource('events', EventController::class)
+    ->only(['store', 'update', 'destroy'])
+    ->middleware(['auth:sanctum','throttle:api']);
+
+Route::apiResource('events.attendees',AttendeeController::class)
+->scoped(['attendees' =>'events'])
+->only(['index','show','update']);
+
+Route::apiResource('events.attendees',AttendeeController::class)
+->scoped(['attendees' =>'events'])->except('update')->middleware('auth:sanctum')
+->only(['store','destroy']);
